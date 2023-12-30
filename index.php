@@ -22,9 +22,9 @@ class db
         $this->conn = mysqli_connect($this->hostname, $this->username, $this->password, $this->db_name);
 
         if (!$this->conn) {
-            echo "Failed to connect db\n";
+            echo "Failed to connect db ";
         } else {
-            echo "Database Connected\n";
+            // echo "Database Connected ";
         }
     }
 
@@ -38,7 +38,7 @@ class db
         $stmt->bind_param("ssss", $name, $gender, $class, $roll);
 
         if($stmt->execute()) {
-            echo "Data inserted to table successfully\n";
+            echo "Data inserted to table successfully ";
         }else{
             echo "Failed to inserted data to table.";
         }
@@ -46,13 +46,13 @@ class db
         $stmt->close();
     }
 
-
+// update data to table
     public function update_info($where, $field, $data) {
 
         $allowed_field = ["name", "gender", "class", "roll"];
 
         if(!in_array($field, $allowed_field)){
-            echo "Invalid field\n";
+            echo "Invalid field ";
             return;
         }
 
@@ -60,9 +60,35 @@ class db
         $stmt -> bind_param("ss",  $data, $where);
 
         if($stmt->execute()) {
-            echo "Data updated successfully\n";
+            echo "Data updated successfully ";
         }else{
             echo "Failed to updated data";
+        }
+    }
+
+
+    // get/select data from table
+
+    public function get_data() {
+        $stmt = $this->conn->prepare("SELECT * FROM student");
+
+        if($stmt->execute()) {
+
+            $result = $stmt->get_result();
+            
+
+
+           while($row = mysqli_fetch_array($result)) {
+                $name = $row["name"];
+                $gender = $row["gender"];
+                $class = $row["class"];
+                $roll = $row["roll"];
+
+                echo "Name: $name. Gender: $gender. Class: $class Roll: $roll";
+                echo "<br>";
+           }
+        }else{
+            echo "Failed to fetch data";
         }
     }
 }
@@ -71,6 +97,8 @@ $database = new db("localhost", "root", "", "oop");
 
 // $database->insert_info("Binu", "female", "Honours", "12345");
 
-$database->update_info("Binu", "class", "HSC");
+// $database->update_info("Binu", "class", "HSC");
+
+$database->get_data();
 
 ?>
