@@ -45,10 +45,32 @@ class db
 
         $stmt->close();
     }
+
+
+    public function update_info($where, $field, $data) {
+
+        $allowed_field = ["name", "gender", "class", "roll"];
+
+        if(!in_array($field, $allowed_field)){
+            echo "Invalid field\n";
+            return;
+        }
+
+        $stmt = $this->conn->prepare("UPDATE student SET $field = ? where name = ?");
+        $stmt -> bind_param("ss",  $data, $where);
+
+        if($stmt->execute()) {
+            echo "Data updated successfully\n";
+        }else{
+            echo "Failed to updated data";
+        }
+    }
 }
 
 $database = new db("localhost", "root", "", "oop");
 
-$database->insert_info("Binu", "female", "Honours", "12345");
+// $database->insert_info("Binu", "female", "Honours", "12345");
+
+$database->update_info("Binu", "class", "HSC");
 
 ?>
