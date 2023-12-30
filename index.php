@@ -91,6 +91,20 @@ class db
             echo "Failed to fetch data";
         }
     }
+
+    // delete data
+
+    public function delete_data($t_name, $c_name, $c_value) {
+        $stmt = $this->conn->prepare("DELETE FROM $t_name WHERE $c_name = ?");
+
+        $stmt->bind_param("s", $c_value);
+
+        if($stmt->execute()) {
+            echo "Data deleted successfully";
+        }else{
+            echo "Failed to delete data";
+        }
+    }
 }
 
 $database = new db("localhost", "root", "", "oop");
@@ -99,6 +113,8 @@ $database = new db("localhost", "root", "", "oop");
 
 // $database->update_info("Binu", "class", "HSC");
 
-$database->get_data();
+// $database->get_data();
+
+$database->delete_data("student", "name", "Arif");
 
 ?>
